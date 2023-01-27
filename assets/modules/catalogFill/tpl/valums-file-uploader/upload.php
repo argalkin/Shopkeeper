@@ -1,5 +1,20 @@
 <?php
 
+define('MODX_API_MODE', true);
+define('IN_MANAGER_MODE', true);
+
+include_once("../../../../../index.php");
+
+$modx->db->connect();
+
+if (empty ($modx->config)) {
+    $modx->getSettings();
+}
+
+if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')) {
+    $modx->sendErrorPage();
+}
+
 /**
  * Handle file uploads via XMLHttpRequest
  */
@@ -153,7 +168,7 @@ class qqFileUploader {
 }
 
 // list of valid extensions, ex. array("jpeg", "xml", "bmp")
-$allowedExtensions = array();
+$allowedExtensions = array('csv', 'xls', 'xlsx');
 // max file size in bytes
 $sizeLimit = 30 * 1024 * 1024;
 
